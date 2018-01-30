@@ -13,8 +13,8 @@ class UsersController < ApplicationController
     if @user.save
       # success 処理
       flash[:success] = 'Welcome to the Sample App!'
-      # render_to @user
-      redirect_to user_url(@user) #と同等
+      redirect_to @user
+      # redirect_to user_url(@user)と同等
     else
       render 'new'
     end
