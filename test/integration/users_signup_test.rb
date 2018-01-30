@@ -27,5 +27,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     end
     follow_redirect!
     assert_template 'users/show'
+    # ユーザー登録の終わったユーザーがログイン状態になっているかどうかを確認できる
+    is_logged_in?
   end
 end
