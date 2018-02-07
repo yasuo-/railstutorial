@@ -41,11 +41,28 @@ module SessionsHelper
     cookies.delete(:user_id)
     cookies.delete(:remember_token)
   end
-  
+
   # 現在のユーザーをログアウトする
   def log_out
     forget(current_user)
     session.delete(:user_id)
     @current_user = nil
+  end
+
+  # 記憶したURL (もしくはデフォルト値) にリダイレクト
+  def redirect_back_or(default)
+    redirect_to(session[:forwarding_url] || default)
+    session.delete(:forwarding_url)
+  end
+
+  # アクセスしようとしたURLを覚えておく
+  def store_location
+    session[:forwarding_url] = request.original_url if request.get?
+    # if request.get? -> getのみにしておく
+    # GETリクエストが送られたときだけ格納
+    # 例えばログインしていないユーザーがフォームを使って送信した場合、転送先のURLを保存させないようにできます。
+    # 例えばユーザがセッション用のcookieを手動で削除してフォームから送信するケースなどです。
+    # こういったケースに対処しておかないと、POSTや PATCH、DELETEリクエストを期待しているURLに対して、
+    # (リダイレクトを通して) GETリクエストが送られてしまい、場合によってはエラーが発生します。
   end
 end
