@@ -51,4 +51,22 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", logout_path,      count: 0
     assert_select "a[href=?]", user_path(@user), count: 0
   end
+
+  test 'login with remembering' do
+    log_in_as(@user, remember_me: '1')
+    # 注意 テスト内ではcookiesメソッドにシンボルを使えない
+    # cookies[:remember_token] -> シンボルだとうまく動かない. nilになる
+    assert_not_empty cookies['remember_token']
+  end
+
+  test 'login without remebering' do
+    # cookie保存してlogin
+    log_in_as(@user, remember_me: '1')
+    delete logout_path
+    # cookie削除してlogin
+    log_in_as(@user, remember_me: '0')
+    # 注意 テスト内ではcookiesメソッドにシンボルを使えない
+    # cookies[:remember_token] -> シンボルだとうまく動かない. nilになる
+    assert_empty cookies['remember_token']
+  end
 end
