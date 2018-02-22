@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  # ユーザーがマイクロポストを複数所有する (has_many) 関連付け
+  has_many :microposts
   attr_accessor :remember_token
   #  email属性を小文字に変換してメールアドレスの一意性を保証する
   before_save { self.email = email.downcase }
